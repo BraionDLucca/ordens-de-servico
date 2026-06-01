@@ -8,9 +8,22 @@ from fastapi.security import OAuth2PasswordBearer
 from core.database import get_db
 from models.usuario_model import Usuario, PerfilUsuario
 import repositories.auth_repository as repo
+from dotenv import load_dotenv
+import os
 
-SECRET_KEY = "segredo"
-ALGORITHM = "HS256"
+load_dotenv()
+
+# Variáveis de ambiente necessárias
+SECRET_KEY = os.getenv("SECRET_KEY")
+ALGORITHM = os.getenv("ALGORITHM")
+
+if SECRET_KEY is None:
+    raise ValueError("Variável de ambiente 'SECRET_KEY' é obrigatória")
+
+if ALGORITHM is None:
+    raise ValueError("Variável de ambiente 'ALGORITHM' é obrigatória")
+
+# Tempo de expiração de tokens jwt
 EXPIRE_MIN = 60
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
@@ -22,42 +35,62 @@ def verificar_senha(senha_plana: str, senha_hash: str) -> bool:
     return bcrypt.checkpw(senha_plana.encode("utf-8"), senha_hash.encode("utf-8"))
 
 def criar_token(dados: dict) -> str:
+    
     payload = dados.copy()
     payload["exp"] = datetime.utcnow() + timedelta(minutes=EXPIRE_MIN)
-    return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
+    jwt_string = jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM) # type: ignore
+
+    return jwt_string
 
 def login(email: str, senha: str, db: Session) -> dict:
+
     usuario = repo.buscar_por_email(email, db)
+
     if usuario is None or not verificar_senha(senha, str(usuario.senha_hash)):
         raise HTTPException(status_code=401, detail="Credenciais inválidas")
+    
     token = criar_token({"sub": str(usuario.id), "perfil": usuario.perfil.value})
+    
     return {"access_token": token, "token_type": "bearer"}
 
 def get_usuario_atual(
     token: str = Depends(oauth2_scheme),
-    db: Session = Depends(get_db),
-) -> Usuario:
+    db: Session = Depends(get_db),) -> Usuario:
+    
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM]) # type: ignore
         sub: Optional[str] = payload.get("sub")
+
         if sub is None:
             raise HTTPException(status_code=401, detail="Token inválido")
+        
         user_id = int(sub)
+
     except (JWTError, ValueError):
         raise HTTPException(status_code=401, detail="Token inválido")
 
     usuario = repo.buscar_por_id(user_id, db)
+
     if usuario is None:
         raise HTTPException(status_code=401, detail="Usuário não encontrado")
+    
     return usuario
 
-def criar_usuario(nome: str, email: str, senha: str, perfil: PerfilUsuario, db: Session) -> Usuario:
+def criar_usuario(
+        nome: str,
+        email: str,
+        senha: str,
+        perfil: PerfilUsuario,
+        db: Session) -> Usuario:
+    
     if repo.buscar_por_email(email, db):
         raise HTTPException(400, "E-mail já cadastrado")
+    
     novo = Usuario(
         nome=nome,
         email=email,
         senha_hash=hash_senha(senha),
         perfil=perfil,
     )
+
     return repo.salvar_usuario(novo, db)

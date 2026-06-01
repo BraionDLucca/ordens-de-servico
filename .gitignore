@@ -1,4 +1,4 @@
-estoque.db
-__pycache__
-.vscode
-.env
+*estoque.db
+*__pycache__
+*.vscode
+*.env
