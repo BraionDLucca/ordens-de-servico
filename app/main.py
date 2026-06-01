@@ -22,10 +22,12 @@ app = FastAPI(
 from routers.auth_router import router as auth_router
 from routers.cliente_router import router as cliente_router
 from routers.ordem_servico_router import router as ordem_servico_router
+from routers.report_router import router as report_router
 
 app.include_router(auth_router)
 app.include_router(cliente_router)
 app.include_router(ordem_servico_router)
+app.include_router(report_router)
 
 @app.get("/")
 def read_root():
