@@ -1,16 +1,17 @@
 # routers/auth_router.py
 from fastapi import APIRouter, Depends
+from fastapi.security import OAuth2PasswordRequestForm 
 from sqlalchemy.orm import Session
 from core.database import get_db
-from schemas.auth_schemas import LoginRequest, TokenResponse, UsuarioCreate, UsuarioResponse
+from schemas.auth_schemas import TokenResponse, UsuarioCreate, UsuarioResponse
 from services.auth_service import login, criar_usuario, get_usuario_atual
 from models.usuario_model import PerfilUsuario
 
 router = APIRouter(prefix="/auth", tags=["Autenticação"])
 
 @router.post("/login", response_model=TokenResponse)
-def fazer_login(dados: LoginRequest, db: Session = Depends(get_db)):
-    return login(dados.email, dados.senha, db)
+def fazer_login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    return login(form_data.username, form_data.password, db)
 
 @router.post("/usuarios", response_model=UsuarioResponse)
 def registrar_usuario(dados: UsuarioCreate, db: Session = Depends(get_db)):

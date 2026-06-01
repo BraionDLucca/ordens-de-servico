@@ -1,6 +1,6 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from core.database import engine, Base
-
 
 # importa todos os models para o Base reconhecer as tabelas
 import models.usuario_model
@@ -14,9 +14,17 @@ import models.PecaOrdemServico
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
-    title="API de Assistência Técnica",
-    description="Gestão de OS, clientes, técnicos e peças.",
+    title="API de Assistência Técnica - Backend Challenge",
+    description="Sistema profissional para gestão de OS, clientes, técnicos e estoque de peças.",
     version="1.0.0"
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"], 
+    allow_credentials=True,
+    allow_methods=["*"], 
+    allow_headers=["*"], 
 )
 
 from routers.auth_router import router as auth_router
@@ -31,4 +39,4 @@ app.include_router(report_router)
 
 @app.get("/")
 def read_root():
-    return {"status": "online"}
+    return {"status": "online", "message": "API rodando com CORS configurado!"}
