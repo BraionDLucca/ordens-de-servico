@@ -126,7 +126,7 @@ Entidades ORM responsáveis pelo mapeamento das tabelas do banco de dados.
 
 ---
 
-# Tecnologias Utilizadas
+# Utilizadas
 
 * Python
 * FastAPI
