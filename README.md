@@ -18,6 +18,7 @@ Fluxo da aplicação:
 
 ```text
 Router → Service → Repository → Database
+
 ```
 
 ## Camadas da Aplicação
@@ -87,6 +88,7 @@ Entidades ORM responsáveis pelo mapeamento das tabelas do banco de dados.
  ┃ ┗ 📜 report_service.py
  ┣ 📜 .gitignore
  ┗ 📜 requirements.txt
+
 ```
 
 ---
@@ -144,9 +146,10 @@ Entidades ORM responsáveis pelo mapeamento das tabelas do banco de dados.
 ## 1. Clonar o Repositório
 
 ```bash
-git clone https://github.com/seu-usuario/ordens-de-servico.git
+git clone [https://github.com/BraionDLucca/ordens-de-servico.git](https://github.com/BraionDLucca/ordens-de-servico.git)
 
 cd ordens-de-servico
+
 ```
 
 ---
@@ -159,6 +162,7 @@ cd ordens-de-servico
 python -m venv venv
 
 venv\Scripts\activate
+
 ```
 
 ### Linux / macOS
@@ -167,6 +171,7 @@ venv\Scripts\activate
 python -m venv venv
 
 source venv/bin/activate
+
 ```
 
 ---
@@ -175,25 +180,20 @@ source venv/bin/activate
 
 ```bash
 pip install -r requirements.txt
+
 ```
 
 ---
 
 ## 4. Configurar Variáveis de Ambiente
 
-Crie um arquivo `.env` na raiz do projeto contendo as variáveis esperadas pelo arquivo:
-
-```text
-config/settings.py
-```
-
-Exemplo:
+Crie um arquivo `.env` na raiz do projeto contendo as variáveis necessárias para a aplicação:
 
 ```env
 DATABASE_URL=
 SECRET_KEY=
 ALGORITHM=
-ACCESS_TOKEN_EXPIRE_MINUTES=
+
 ```
 
 ---
@@ -204,12 +204,14 @@ Inicie o servidor local utilizando:
 
 ```bash
 uvicorn app.main:app --reload
+
 ```
 
 A aplicação ficará disponível em:
 
 ```text
-http://127.0.0.1:8000
+[http://127.0.0.1:8000](http://127.0.0.1:8000)
+
 ```
 
 ---
@@ -221,13 +223,15 @@ Após iniciar o servidor, a documentação interativa estará disponível em:
 ## Swagger UI
 
 ```text
-http://127.0.0.1:8000/docs
+[http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+
 ```
 
 ## ReDoc
 
 ```text
-http://127.0.0.1:8000/redoc
+[http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc)
+
 ```
 
 ---
@@ -244,6 +248,10 @@ http://127.0.0.1:8000/redoc
 
 # Considerações Finais
 
-O projeto foi desenvolvido com foco em boas práticas de engenharia de software, priorizando organização estrutural, clareza de código e escalabilidade da aplicação.
+O projeto foi desenvolvido com foco em boas práticas de engenharia de software, priorizando organization estrutural, clareza de código e escalabilidade da aplicação.
 
 A arquitetura adotada permite fácil evolução do sistema, integração com novos módulos e adaptação para diferentes cenários de negócio.
+
+```
+
+```
